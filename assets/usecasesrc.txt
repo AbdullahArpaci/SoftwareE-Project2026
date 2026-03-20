@@ -1,0 +1,77 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Müşteri" as musteri
+actor "Banka Personeli" as personel
+actor "Sistem Yöneticisi" as admin
+
+rectangle "Bankacılık Otomasyon Sistemi" {
+  usecase "UC-01: Giriş Yap" as uc1
+  usecase "UC-02: Kimlik Doğrulama" as uc2
+  usecase "UC-03: Şifremi Unuttum" as uc3
+  usecase "UC-04: Hesap Şifresi Belirleme" as uc4
+
+  usecase "UC-05: Hesap Açma" as uc5
+  usecase "UC-06: Hesap Kapatma" as uc6
+  usecase "UC-07: Müşteri Profil Yönetimi" as uc7
+  usecase "UC-08: Hesapları Görüntüle" as uc8
+
+  usecase "UC-09: Para Çekme" as uc9
+  usecase "UC-10: Para Yatırma" as uc10
+  usecase "UC-11: Para Transferi" as uc11
+  usecase "UC-12: Bakiye Kontrolü" as uc12
+  usecase "UC-13: Dekont Oluştur" as uc13
+
+  usecase "UC-14: Banka Kartı Oluşturmak" as uc14
+  usecase "UC-15: Banka Kartı PIN Belirleme" as uc15
+  usecase "UC-16: Banka Kartı PIN Unuttum" as uc16
+
+  usecase "UC-17: Çıkış Yap" as uc17
+}
+
+musteri --> uc1
+musteri --> uc4
+musteri --> uc5
+musteri --> uc6
+musteri --> uc7
+musteri --> uc8
+musteri --> uc9
+musteri --> uc10
+musteri --> uc11
+musteri --> uc14
+musteri --> uc15
+musteri --> uc16
+musteri --> uc17
+
+personel --> uc1
+personel --> uc5
+personel --> uc6
+personel --> uc7
+personel --> uc17
+
+admin --> uc1
+admin --> uc5
+admin --> uc6
+admin --> uc7
+admin --> uc17
+
+uc1 ..> uc2 : <<include>>
+uc3 ..> uc1 : <<extend>>
+uc3 ..> uc4 : <<include>>
+
+uc5 ..> uc4 : <<include>>
+uc6 ..> uc2 : <<include>>
+uc7 ..> uc2 : <<include>>
+
+uc9 ..> uc12 : <<include>>
+uc11 ..> uc12 : <<include>>
+uc13 ..> uc9 : <<extend>>
+uc13 ..> uc10 : <<extend>>
+uc13 ..> uc11 : <<extend>>
+
+uc14 ..> uc15 : <<include>>
+uc16 ..> uc15 : <<include>>
+
+uc6 ..> uc12 : <<include>>
+@enduml
