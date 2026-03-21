@@ -1,0 +1,35 @@
+@startuml
+title UC-11 Para Transferi
+actor "Müşteri" as Musteri
+boundary "Transfer Arayüzü" as UI
+control "TransferServisi" as Transfer
+control "HesapServisi" as Hesap
+database "Veritabanı" as DB
+control "DekontServisi" as Dekont
+
+Musteri -> UI : transfer bilgilerini girer
+UI -> Transfer : transferYap(gonderenHesap, aliciHesap, tutar)
+Transfer -> Hesap : bakiyeKontrol(gonderenHesap, tutar)
+
+alt Bakiye yeterli
+    Hesap -> DB : bakiyeGetir(gonderenHesap)
+    DB --> Hesap : mevcutBakiye
+    Hesap --> Transfer : bakiyeYeterli
+    Transfer -> DB : bakiyeGuncelle(gonderenHesap, -tutar)
+    DB --> Transfer : guncellemeBasarili
+    Transfer -> DB : bakiyeGuncelle(aliciHesap, +tutar)
+    DB --> Transfer : guncellemeBasarili
+    Transfer -> DB : islemKaydet()
+    DB --> Transfer : kayitBasarili
+    Transfer --> UI : transferBasarili()
+    opt Dekont istenirse
+        UI -> Dekont : dekontOlustur(islemBilgisi)
+        Dekont --> UI : dekontGoster()
+    end
+    UI --> Musteri : basariMesajiGoster()
+else Bakiye yetersiz
+    Hesap --> Transfer : yetersizBakiye
+    Transfer --> UI : hataMesajiGoster("Yetersiz bakiye")
+    UI --> Musteri : islemBasarisiz()
+end
+@enduml

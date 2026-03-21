@@ -1,0 +1,27 @@
+@startuml
+title UC-09 Para Çekme
+actor "Müşteri" as Musteri
+boundary "Para Çekme Arayüzü" as UI
+control "HesapServisi" as Hesap
+database "Veritabanı" as DB
+control "DekontServisi" as Dekont
+
+Musteri -> UI : hesap ve tutar seçer
+UI -> Hesap : paraCek(hesapNo, tutar)
+Hesap -> DB : bakiyeKontrol(hesapNo, tutar)
+DB --> Hesap : mevcutBakiye
+
+alt Bakiye yeterli
+    Hesap -> DB : bakiyeGuncelle(hesapNo, -tutar)
+    DB --> Hesap : guncellemeBasarili
+    Hesap --> UI : paraCekmeBasarili()
+    opt Dekont istenirse
+        UI -> Dekont : dekontOlustur(islemBilgisi)
+        Dekont --> UI : dekontGoster()
+    end
+    UI --> Musteri : basariMesajiGoster()
+else Bakiye yetersiz
+    Hesap --> UI : hataMesajiGoster("Yetersiz bakiye")
+    UI --> Musteri : islemBasarisiz()
+end
+@enduml

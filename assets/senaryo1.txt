@@ -1,0 +1,24 @@
+@startuml
+title UC-01 Giriş Yap
+
+actor "Kullanıcı" as Kullanici
+boundary "Giriş Arayüzü" as UI
+control "KimlikDogrulamaServisi" as Auth
+database "Veritabanı" as DB
+
+Kullanici -> UI : kimlikNo ve şifre girer
+UI -> Auth : login(kimlikNo, sifre)
+Auth -> DB : kullaniciGetir(kimlikNo)
+DB --> Auth : kullaniciBilgileri
+
+Auth -> Auth : sifreDogrula(sifre)
+
+alt Doğrulama başarılı
+    Auth --> UI : girisBasarili()
+    UI --> Kullanici : anaEkraniGoster()
+else Doğrulama başarısız
+    Auth --> UI : hataMesajiGoster("Hatalı giriş")
+    UI --> Kullanici : girisHatasiGoster()
+end
+
+@enduml
