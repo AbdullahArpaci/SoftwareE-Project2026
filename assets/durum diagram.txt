@@ -1,0 +1,35 @@
+@startuml
+title 4.3 Banka Hesabý ve Kullanýcý Giriþ Durum Diyagramý
+
+skinparam shadowing false
+skinparam state {
+    BackgroundColor White
+    BorderColor Black
+}
+
+state "Giriþ Ekraný" as Login
+state "Þifre Doðrulama" as Dogrulama <<choice>>
+state "Ana Menü (Aktif)" as Aktif
+state "Ýþlem Seçimi" as IslemSecim
+state "Bakiye Kontrolü" as BakiyeKontrol <<choice>>
+state "Ýþlem Onaylandý" as Onay
+state "Kapatma Süreci" as Kapatiliyor
+
+[*] --> Login : Sistemi Baþlat
+
+Login --> Dogrulama : Kullanýcý Bilgilerini Gir (UC-01)
+Dogrulama --> Login : [Þifre Hatalý] / Uyarý Ver
+Dogrulama --> Aktif : [Þifre Doðru] / Giriþ Yap
+
+Aktif --> IslemSecim : Para Çekme/Yatýrma/Transfer Seç
+IslemSecim --> BakiyeKontrol : Tutarý Gir
+
+BakiyeKontrol --> Aktif : [Yetersiz Bakiye] / Hata Mesajý
+BakiyeKontrol --> Onay : [Bakiye Yeterli]
+
+Onay --> Aktif : Ýþlem Tamamlandý / Log Kaydet
+
+Aktif --> Kapatiliyor : Hesap Kapatma Talebi (UC-06)
+Kapatiliyor --> [*] : Bakiye=0 ise Hesabý Sil
+
+@enduml
