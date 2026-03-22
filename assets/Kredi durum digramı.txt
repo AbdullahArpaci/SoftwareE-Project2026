@@ -1,0 +1,42 @@
+@startuml
+title 4.3.2 Kredi Baþvurusu Durum Diyagramý
+
+' Stil Ayarlarý
+skinparam shadowing false
+skinparam state {
+    BackgroundColor White
+    BorderColor Black
+}
+
+state "Baþvuru Alýndý" as Basvuru
+state "Deðerlendirme Aþamasýnda" as Degerlendirme
+state "Karar Karþýlaþtýrma" as Karar <<choice>>
+state "Reddedildi" as Reddedildi
+state "Onaylandý / Ödeme Bekliyor" as Onaylandi
+state "Kredi Aktif" as Aktif
+state "Kredi Kapandý" as Kapandi
+
+[*] --> Basvuru : Müþteri Kredi Baþvurusu Yapar (UC-15)
+Basvuru --> Degerlendirme : Sistem Kredi Skoru Sorgular
+
+Degerlendirme --> Karar : Banka Politikasý Kontrolü
+Karar --> Reddedildi : [Kredi Skoru Düþük]
+Karar --> Onaylandi : [Kredi Skoru Uygun]
+
+Reddedildi --> [*] : Süreç Sonlandý
+
+Onaylandi --> Aktif : Müþteri Sözleþmeyi Onaylar
+Aktif --> Aktif : Taksit Ödemesi Yapýlýyor
+
+state Taksit_Kontrol <<choice>>
+Aktif --> Taksit_Kontrol : Son Taksit Ödendi mi?
+Taksit_Kontrol --> Aktif : [Hayýr]
+Taksit_Kontrol --> Kapandi : [Evet]
+
+Kapandi --> [*]
+
+' Notlar
+note right of Degerlendirme : Müþterinin gelir belgesi ve\ngeçmiþ borçlarý analiz edilir.
+note left of Reddedildi : Red gerekçesi müþteriye\nSMS/E-posta ile bildirilir.
+
+@enduml
