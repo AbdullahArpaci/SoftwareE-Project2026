@@ -1,0 +1,27 @@
+@startuml
+title Sistem İçi Aktivite Diyagramı - Para Transferi (Havale/Virman)
+
+start
+:Müşteri "Para Transferi" ekranına girer;
+:Alıcı hesap bilgisi ve gönderilecek tutar girilir;
+:Sistem "Transferi Onayla" butonuna basılmasını bekler;
+
+if (Tutar > Mevcut Bakiye mi?) then (Evet)
+  :Sistem "Yetersiz Bakiye" hatası gösterir;
+  stop
+else (Hayır)
+  if (Alıcı Hesap Sistemde Var mı?) then (Hayır)
+    :Sistem "Alıcı Hesap Bulunamadı" hatası gösterir;
+    stop
+  else (Evet)
+    :Gönderenin bakiyesinden tutar düşülür (C++ İşlemi);
+    :Alıcının bakiyesine tutar eklenir (C++ İşlemi);
+    :İşlem tarih ve saat damgasıyla log dosyasına kaydedilir;
+    :Veritabanında (ACID prensiplerine uygun) güncelleme yapılır;
+    :Arayüzde (Qt) "İşlem Başarılı" mesajı gösterilir;
+    :Ekranda yeni bakiyeler anlık olarak güncellenir;
+  endif
+endif
+
+stop
+@enduml

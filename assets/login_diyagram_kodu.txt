@@ -1,0 +1,25 @@
+@startuml
+title Sistem İçi Aktivite Diyagramı - Sisteme Giriş (Login)
+
+start
+:Kullanıcı uygulamayı açar;
+:Kullanıcı Adı ve Şifre girilir;
+:Sistem (SQLite/MySQL) veritabanında doğrulama yapar;
+
+if (Bilgiler Doğru mu?) then (Hayır)
+  :Ekranda "Hatalı Giriş" uyarısı (Qt Message Box) gösterilir;
+  :Başarısız giriş zaman damgasıyla loglanır;
+  stop
+else (Evet)
+  :Başarılı giriş zaman damgasıyla loglanır;
+  if (Kullanıcı Rolü Nedir?) then (Yönetici / Admin)
+    :Yönetici (Admin) Paneli açılır;
+    :Müşteri Ekleme/Düzenleme arayüzü yüklenir;
+  else (Müşteri)
+    :Müşteri Paneli açılır;
+    :Güncel bakiye ve hesap hareketleri listelenir;
+  endif
+endif
+
+stop
+@enduml
