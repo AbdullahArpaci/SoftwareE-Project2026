@@ -1,0 +1,39 @@
+# ==========================================
+# BANKA YÖNETİM SİSTEMİ - .gitignore
+# ==========================================
+
+# Veritabanı dosyaları - ASLA commit edilmez!
+*.sqlite
+*.sqlite3
+*.db
+
+# Qt Build çıktıları
+build/
+debug/
+release/
+*.o
+*.exe
+*.out
+*.app
+
+# Qt kişisel ayar dosyaları
+*.user
+*.user.*
+.qmake.stash
+.qmake.cache
+
+# DataGrip / JetBrains IDE dosyaları
+.idea/
+*.iml
+
+# Windows sistem dosyaları
+Thumbs.db
+desktop.ini
+
+# macOS sistem dosyaları
+.DS_Store
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
