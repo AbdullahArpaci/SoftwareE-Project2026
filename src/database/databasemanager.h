@@ -8,10 +8,18 @@
 
 class DataBaseManager{
 public:
-    DataBaseManager();
-    bool connect();
-
+    static DataBaseManager* getInstance();
+    bool connect(const QString& yol);
+    void disconnect();
+    QSqlQuery execute(const QString& sql);
+    void beginTransaction();
+    void commit();
+    void rollback();
+    bool isConnected() const;
 private:
+    DataBaseManager();
+    ~DataBaseManager();
+    static DataBaseManager* instance;
     QSqlDatabase db;
 };
 
