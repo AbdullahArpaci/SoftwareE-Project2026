@@ -1,33 +1,46 @@
 #include "TransferServisi.h"
 #include "HesapServisi.h"
-#include "VeritabaniYoneticisi.h"
+#include "databasemanager.h"
 #include "LogServisi.h"
 #include <QSqlQuery>
+#include <QVariant>
 
-TransferServisi::TransferServisi() {}
-TransferServisi::~TransferServisi() {}
-
-bool TransferServisi::aliciHesapDogrula(QString hesapNo) {
-    VeritabaniYoneticisi* db = VeritabaniYoneticisi::getInstance();
-    QString sql = "SELECT * FROM HESAP WHERE hesapNo = '" + hesapNo + "' AND aktif = 1";
-    QSqlQuery query = db->sorguCalistir(sql);
-    return query.next();
+TransferServisi::TransferServisi()
+{
 }
 
-bool TransferServisi::transferYap(QString gonderen, QString alici, double tutar) {
-    VeritabaniYoneticisi* db = VeritabaniYoneticisi::getInstance();
+TransferServisi::~TransferServisi()
+{
+}
+
+bool TransferServisi::aliciHesapDogrula(QString hesapNo)
+{
+    DataBaseManager* db = DataBaseManager::getInstance();
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM HESAP WHERE hesap_no = :no AND aktif = 1");
+    query.bindValue(":no", hesapNo);
+
+    return query.exec() && query.next();
+}
+
+bool TransferServisi::transferYap(QString gonderen, QString alici, double tutar)
+{
+    DataBaseManager* db = DataBaseManager::getInstance();
     HesapServisi hesapSrv;
     LogServisi logSrv;
 
     if (!aliciHesapDogrula(alici) || tutar <= 0) return false;
 
-    db->transactionBaslat();
+    db->beginTransaction();
 
-    if (hesapSrv.bakiyeKontrol(gonderen, tutar)) {
-        if (hesapSrv.bakiyeGuncelle(gonderen, -tutar) && hesapSrv.bakiyeGuncelle(alici, tutar)) {
+    if (hesapSrv.bakiyeKontrol(gonderen, tutar))
+    {
+        if (hesapSrv.bakiyeGuncelle(gonderen, -tutar) && hesapSrv.bakiyeGuncelle(alici, tutar))
+        {
             db->commit();
 
-            QString detay = QString("%1 nolu hesaptan %2 nolu hesaba %3 TL tutarında transfer başarıyla gerçekleştirildi.")
+            QString detay = QString("%1 nolu hesaptan %2 nolu hesaba %3 TL tutarinda transfer basariyla gerceklestirildi.")
                                 .arg(gonderen)
                                 .arg(alici)
                                 .arg(tutar);
