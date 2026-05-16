@@ -12,6 +12,14 @@ Hesap::Hesap() {
 Hesap::~Hesap() {
 }
 
+// --- SETTER VE GETTER METOTLARININ İÇERİKLERİ ---
+void Hesap::setHesapNo(QString no) { hesapNo = no; }
+void Hesap::setKullaniciID(int id) { kullaniciID = id; }
+void Hesap::setHesapTipi(QString tip) { hesapTipi = tip; }
+void Hesap::setBakiye(double b) { bakiye = b; }
+void Hesap::setParaBirimi(QString pb) { paraBirimi = pb; }
+QString Hesap::hesapNoGetir() { return hesapNo; }
+
 bool Hesap::paraYatir(double miktar) {
     if (miktar <= 0 || donduruldu) return false;
 
@@ -28,7 +36,6 @@ bool Hesap::paraYatir(double miktar) {
 }
 
 bool Hesap::paraCek(double miktar) {
-    // TODO (Yusuf): Bu işlem öncesi HesapServisi::bakiyeKontrol çalışmalı
     if (miktar <= 0 || bakiye < miktar || donduruldu) return false;
 
     QSqlQuery query;
