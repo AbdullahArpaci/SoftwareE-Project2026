@@ -22,7 +22,8 @@ HEADERS += \
     src/services/headers/SistemKontrolcusu.h \
     src/services/headers/LogServisi.h \
     src/ui/Customer/CustomerDashboard.h \
-    src/ui/LoginWindow.h
+    src/ui/LoginWindow.h \
+    src/ui/admindashboard.h
 
 SOURCES += \
     main.cpp \
@@ -37,10 +38,10 @@ SOURCES += \
     src/services/sources/SistemKontrolcusu.cpp \
     src/services/sources/LogServisi.cpp \
     src/ui/Customer/CustomerDashboard.cpp \
-    src/ui/LoginWindow.cpp
+    src/ui/LoginWindow.cpp \
+    src/ui/admindashboard.cpp
 
-FORMS += \
-    src/ui/admindashboard.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
