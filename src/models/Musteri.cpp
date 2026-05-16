@@ -1,5 +1,5 @@
 #include "Musteri.h"
-#include "../database/databasemanager.h"
+#include <databasemanager.h>
 #include <QSqlQuery>
 #include <QVariant>
 
