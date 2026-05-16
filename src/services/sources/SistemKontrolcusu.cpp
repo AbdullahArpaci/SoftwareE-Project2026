@@ -3,11 +3,25 @@
 #include "LogServisi.h"
 #include "Hesap.h"
 #include "Islem.h"
+#include "Musteri.h"
+#include "Yonetici.h"
 #include <mutex>
 #include <QSqlQuery>
 #include <QVariant>
 
 std::mutex islemMutex;
+
+// Singleton ornegi baslangicta nullptr olmali
+SistemKontrolcusu* SistemKontrolcusu::instance = nullptr;
+
+SistemKontrolcusu* SistemKontrolcusu::getInstance()
+{
+    if (instance == nullptr)
+    {
+        instance = new SistemKontrolcusu();
+    }
+    return instance;
+}
 
 SistemKontrolcusu::SistemKontrolcusu()
 {
@@ -34,11 +48,27 @@ Kullanici* SistemKontrolcusu::kullaniciDogrula(QString kimlikNo, QString sifre)
     if (query.exec() && query.next())
     {
         int kullaniciID = query.value("kullanici_id").toInt();
+        QString rol = query.value("rol").toString();
+
         QString mesaj = QString("%1 kimlik numarali kullanici sisteme giris yapti.").arg(kimlikNo);
         logSrv.logKaydet(kullaniciID, "Giris Basarili", mesaj);
 
-        // TODO(Durancan): Veritabanindan gelen verilerle uygun Kullanici, Musteri veya Yonetici nesnesini olusturup (veya Factory uzerinden uretip) burada dondurulmeli.
-        return nullptr;
+        Kullanici* aktifKullanici = nullptr;
+
+
+        if (rol == "yonetici")
+        {
+            aktifKullanici = new Yonetici();
+        }
+        else
+        {
+            aktifKullanici = new Musteri();
+        }
+
+        // TODO(Durancan): Kullanici, Musteri ve Yonetici siniflarinda su an parametreli constructor veya setter metotlari yok
+        // Yukarida uretilen aktifKullanici nesnesinin icini veritabanindan gelen verilerle doldurabilmek icin siniflarina setter metotlari eklemelisin.
+
+        return aktifKullanici;
     }
     else
     {

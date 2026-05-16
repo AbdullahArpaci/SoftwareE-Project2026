@@ -9,13 +9,22 @@ class Kullanici;
 class Hesap;
 class Islem;
 
-class SistemKontrolcusu {
+class SistemKontrolcusu
+{
 private:
+    static SistemKontrolcusu* instance;
     HesapServisi* hesapServisi;
     TransferServisi* transferServisi;
-public:
+
     SistemKontrolcusu();
     ~SistemKontrolcusu();
+
+    SistemKontrolcusu(const SistemKontrolcusu&) = delete;
+    SistemKontrolcusu& operator=(const SistemKontrolcusu&) = delete;
+
+public:
+    static SistemKontrolcusu* getInstance();
+
     Kullanici* kullaniciDogrula(QString kimlikNo, QString sifre);
     bool islemYonet(Hesap* hesap, Islem* islem);
     void oturumKapat();
