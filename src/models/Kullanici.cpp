@@ -10,6 +10,13 @@ Kullanici::Kullanici() {
 Kullanici::~Kullanici() {
 }
 
+// --- SETTER METOTLARININ İÇERİKLERİ ---
+void Kullanici::setKullaniciID(int id) { kullaniciID = id; }
+void Kullanici::setKimlikNo(QString kimlik) { kimlikNo = kimlik; }
+void Kullanici::setAd(QString a) { ad = a; }
+void Kullanici::setSoyad(QString s) { soyad = s; }
+void Kullanici::setRol(QString r) { rol = r; }
+
 bool Kullanici::girisYap() {
 
     QSqlQuery query;
@@ -23,14 +30,12 @@ bool Kullanici::girisYap() {
         soyad = query.value("soyad").toString();
         rol = query.value("rol").toString();
 
-        // TODO (Yusuf): SistemKontrolcusu tarafında oturum açma işlemleri devam etmeli.
         return true;
     }
     return false;
 }
 
 void Kullanici::cikisYap() {
-    // TODO (Yusuf): SistemKontrolcusu::oturumKapat() çağrılacak.
     kullaniciID = 0;
     kimlikNo = "";
 }

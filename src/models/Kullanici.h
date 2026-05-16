@@ -26,9 +26,16 @@ public:
     QString kimlikNoGetir();
     QString rolGetir();
 
+    // --- YUSUF'UN TODO'SU İÇİN EKLENEN SETTER METOTLARI ---
+    void setKullaniciID(int id);
+    void setKimlikNo(QString kimlik);
+    void setAd(QString a);
+    void setSoyad(QString s);
+    void setRol(QString r);
+
     // --- TAKIM İÇİN NOTLAR (Abdullah ve Yusuf'un Dikkatine) ---
-    // TODO (Yusuf): girisYap() metodu cagirildiginda SistemKontrolcusu::kullaniciDogrula() metodu calismalidir. [cite: 2, 446]
-    // TODO (Abdullah): Giris isleminin basarili/basarisiz durumu VeritabaniYoneticisi::etkinlikKaydet() ile loglanmalidir. [cite: 2, 453]
+    // TODO (Yusuf): girisYap() metodu cagirildiginda SistemKontrolcusu::kullaniciDogrula() metodu calismalidir.
+    // TODO (Abdullah): Giris isleminin basarili/basarisiz durumu VeritabaniYoneticisi::etkinlikKaydet() ile loglanmalidir.
 };
 
 #endif // KULLANICI_H

@@ -16,8 +16,11 @@ public:
     QList<Islem*> tumKayitlariGoruntule();
     bool krediDegerlendir(int krediID, bool onay);
 
+    // Yusuf'un servis katmanında kullanabilmesi için ID Getter'ı
+    int kullaniciIDGetir() const;
+
     // --- TAKIM İÇİN NOTLAR ---
-    // TODO (Abdullah): musteriEkle() ve hesabiDondur() calistiginda veritabani update islemleri yapilmalidir. [cite: 2, 440, 443]
+    // TODO (Abdullah): musteriEkle() ve hesabiDondur() calistiginda veritabani update islemleri yapilmalidir.
 };
 
 #endif // YONETICI_H

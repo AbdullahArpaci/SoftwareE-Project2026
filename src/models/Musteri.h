@@ -17,8 +17,11 @@ public:
     QList<Hesap*> hesapDetaylariAl();
     void hesapEkle(Hesap* hesap);
 
+    // Yusuf ve Abdullah'ın servislerde kullanabilmesi için eklenen getter
+    int kullaniciIDGetir() const;
+
     // --- TAKIM İÇİN NOTLAR ---
-    // TODO (Abdullah): profilGoruntule() cagirildiginda Musteri'nin verileri VeritabaniYoneticisi::kullaniciVerisiYukle() ile cekilmelidir. [cite: 2, 451]
+    // TODO (Abdullah): profilGoruntule() cagirildiginda Musteri'nin verileri VeritabaniYoneticisi::kullaniciVerisiYukle() ile cekilmelidir.
 };
 
 #endif // MUSTERI_H
