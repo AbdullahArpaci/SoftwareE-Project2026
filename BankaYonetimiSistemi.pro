@@ -37,6 +37,7 @@ HEADERS += \
 
 FORMS += \
     src/ui/admindashboard.ui \
+    src/ui/admindashboard.ui \
     src/ui/moneytransfer.ui \
     src/ui/receiptdialog.ui \
     src/ui/transactionhistorywindow.ui
