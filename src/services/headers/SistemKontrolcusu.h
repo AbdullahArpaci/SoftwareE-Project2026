@@ -4,8 +4,8 @@
 #include <QString>
 #include "HesapServisi.h"
 #include "TransferServisi.h"
+#include "Kullanici.h"
 
-class Kullanici;
 class Hesap;
 class Islem;
 
