@@ -8,8 +8,7 @@ INCLUDEPATH += src/database \
                src/services/headers \
                src/ui \
                src/ui/customer \
-               src/ui/admin \
-
+               src/ui/admin
 
 HEADERS += \
     src/database/databasemanager.h \
@@ -23,7 +22,8 @@ HEADERS += \
     src/services/headers/SistemKontrolcusu.h \
     src/services/headers/LogServisi.h \
     src/ui/Customer/CustomerDashboard.h \
-    src/ui/LoginWindow.h
+    src/ui/LoginWindow.h \
+    src/ui/admindashboard.h
 
 SOURCES += \
     main.cpp \
@@ -38,4 +38,12 @@ SOURCES += \
     src/services/sources/SistemKontrolcusu.cpp \
     src/services/sources/LogServisi.cpp \
     src/ui/Customer/CustomerDashboard.cpp \
-    src/ui/LoginWindow.cpp
+    src/ui/LoginWindow.cpp \
+    src/ui/admindashboard.cpp
+
+FORMS +=
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target

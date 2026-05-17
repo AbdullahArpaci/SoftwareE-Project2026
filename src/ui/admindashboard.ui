@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AdminDashboard</class>
+ <widget class="QWidget" name="AdminDashboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1281</width>
+    <height>571</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* Ana Arkaplan */
+QWidget {
+    background-color: #1a1a2e;
+    color: white;
+}
+
+/* Tablolar */
+QTableWidget {
+    background-color: #16213e;
+    border: 1px solid #e2b96f;
+    color: white;
+    gridline-color: #e2b96f;
+}
+
+/* Tablo Başlıkları */
+QHeaderView::section {
+    background-color: #e2b96f;
+    color: #1a1a2e;
+    font-weight: bold;
+}
+
+/* Altın Rengi Standart Butonlar */
+QPushButton {
+    background-color: #e2b96f;
+    color: #1a1a2e;
+    border-radius: 5px;
+    padding: 8px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #cda256;
+}
+
+/* Tehlikeli Buton (Sadece Hesabı Dondur butonunu kırmızı yapar) */
+QPushButton#btnHesapDondur {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+QPushButton#btnHesapDondur:hover {
+    background-color: #e55a5a;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTableWidget" name="tableMusteriler"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnHesapDondur">
+     <property name="text">
+      <string>Hesabı Dondur</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableLoglar"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
