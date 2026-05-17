@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "CustomerDashboard.h"
+#include "admindashboard.h"
 
 LoginWindow::LoginWindow(QWidget* parent) : QWidget(parent) {
 
@@ -129,7 +130,8 @@ void LoginWindow::onGirisClicked() {
             CustomerDashboard* dashboard = new CustomerDashboard(kullanici);
             dashboard->show();
         } else {
-            qDebug() << "Admin girişi";
+            AdminDashboard* admin = new AdminDashboard();
+            admin->show();
         }
         this->close();
     } else {

@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QDebug>
 #include <QHeaderView>
+#include <TransferWindow.h>
 
 CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
     : QWidget(parent), aktifKullanici(kullanici) {
@@ -263,8 +264,12 @@ void CustomerDashboard::sonIslemleriYukle() {
 }
 
 void CustomerDashboard::onTransferClicked() {
-    // TODO: TransferWindow açılacak
-    qDebug() << "Transfer butonuna basıldı";
+    TransferWindow* tw = new TransferWindow(this);
+    if(tw->exec() == QDialog::Accepted) {
+        // Transfer oldu, bakiyeyi yenile
+        bakiyeyiYukle();
+        sonIslemleriYukle();
+    }
 }
 
 void CustomerDashboard::onIslemGecmisiClicked() {

@@ -8,7 +8,8 @@ INCLUDEPATH += src/database \
                src/services/headers \
                src/ui \
                src/ui/customer \
-               src/ui/admin
+               src/ui/admin \
+               src/ui/TransferWindow
 
 HEADERS += \
     src/database/databasemanager.h \
@@ -23,7 +24,8 @@ HEADERS += \
     src/services/headers/LogServisi.h \
     src/ui/Customer/CustomerDashboard.h \
     src/ui/LoginWindow.h \
-    src/ui/admindashboard.h
+    src/ui/admin/admindashboard.h \
+    src/ui/TransferWindow/TransferWindow.h
 
 SOURCES += \
     main.cpp \
@@ -39,7 +41,8 @@ SOURCES += \
     src/services/sources/LogServisi.cpp \
     src/ui/Customer/CustomerDashboard.cpp \
     src/ui/LoginWindow.cpp \
-    src/ui/admindashboard.cpp
+    src/ui/admin/admindashboard.cpp \
+    src/ui/TransferWindow/TransferWindow.cpp
 
 FORMS +=
 

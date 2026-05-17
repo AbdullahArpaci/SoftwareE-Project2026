@@ -1,6 +1,7 @@
 #include "TransferWindow.h"
 #include <QMessageBox>
 #include <QDoubleValidator>
+#include <TransferServisi.h>
 
 TransferWindow::TransferWindow(QWidget *parent) : QDialog(parent)
 {
@@ -75,32 +76,43 @@ void TransferWindow::stil_uygula()
 
 void TransferWindow::transfer_islemini_baslat()
 {
-    QString alici_hesap = alici_hesap_input->text();
-    QString transfer_tutari = tutar_input->text();
+    QString alici_hesap = alici_hesap_input->text().trimmed();
+    QString tutar_str   = tutar_input->text().trimmed();
 
-    if (alici_hesap.isEmpty() || transfer_tutari.isEmpty())
-    {
+    if(alici_hesap.isEmpty() || tutar_str.isEmpty()) {
         QMessageBox::warning(this, "Hata", "Lütfen tüm alanları doldurun!");
         return;
     }
 
-    // TODO(Abdullah): TransferServisi backend entegrasyonu burada yapilmalidir
-    // TODO(Durancan): Aktif oturum acan gonderen kullanici bilgisi SistemKontrolcusu uzerinden buraya baglanmalidir
+    double tutar = tutar_str.toDouble();
 
-    QString dekont_mesaji = QString("Transfer Başarıyla Gerçekleşti!\n\nAlıcı Hesap: %1\nTutar: %2 TL\n\nBizi tercih ettiğiniz için teşekkür ederiz.")
-                                .arg(alici_hesap)
-                                .arg(transfer_tutari);
+    // Backend bağlantısı
+    TransferServisi ts;
+    bool basarili = ts.transferYap("TR001", alici_hesap, tutar);
+    // TR001 → şimdilik sabit, ileride aktif kullanıcıdan gelecek
 
-    QMessageBox dekont_popup(this);
-    dekont_popup.setWindowTitle("İşlem Dekontu");
-    dekont_popup.setText(dekont_mesaji);
+    if(basarili) {
+        QString dekont = QString(
+                             "Transfer Başarıyla Gerçekleşti!\n\n"
+                             "Alıcı Hesap: %1\n"
+                             "Tutar: %2 TL\n\n"
+                             "Bizi tercih ettiğiniz için teşekkür ederiz."
+                             ).arg(alici_hesap).arg(tutar_str);
 
-    QString popup_stili = "QMessageBox { background-color: #1a1a2e; border: 1px solid #e2b96f; }"
-                          "QLabel { color: white; font-size: 14px; }"
-                          "QPushButton { background-color: #e2b96f; color: #1a1a2e; font-weight: bold; padding: 8px 15px; border-radius: 4px; }";
-    dekont_popup.setStyleSheet(popup_stili);
+        QMessageBox dekont_popup(this);
+        dekont_popup.setWindowTitle("İşlem Dekontu");
+        dekont_popup.setText(dekont);
+        dekont_popup.setStyleSheet(
+            "QMessageBox { background-color: #1a1a2e; border: 1px solid #e2b96f; }"
+            "QLabel { color: white; font-size: 14px; }"
+            "QPushButton { background-color: #e2b96f; color: #1a1a2e; "
+            "font-weight: bold; padding: 8px 15px; border-radius: 4px; }"
+            );
+        dekont_popup.exec();
+        this->accept();
 
-    dekont_popup.exec();
-
-    this->accept();
+    } else {
+        QMessageBox::warning(this, "Hata",
+                             "Transfer başarısız!\nBakiye yetersiz veya hesap bulunamadı.");
+    }
 }
