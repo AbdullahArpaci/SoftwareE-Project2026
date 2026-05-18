@@ -32,7 +32,7 @@ public:
     void setAd(QString a);
     void setSoyad(QString s);
     void setRol(QString r);
-
+    int getKullaniciID() const { return kullaniciID; }
     // --- TAKIM İÇİN NOTLAR (Abdullah ve Yusuf'un Dikkatine) ---
     // TODO (Yusuf): girisYap() metodu cagirildiginda SistemKontrolcusu::kullaniciDogrula() metodu calismalidir.
     // TODO (Abdullah): Giris isleminin basarili/basarisiz durumu VeritabaniYoneticisi::etkinlikKaydet() ile loglanmalidir.

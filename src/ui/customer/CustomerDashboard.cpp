@@ -200,23 +200,27 @@ QFrame* CustomerDashboard::kartOlustur(const QString& baslik,
 void CustomerDashboard::bakiyeyiYukle() {
     DataBaseManager* db = DataBaseManager::getInstance();
 
-    // Bakiye
-    QSqlQuery bakiyeSorgu = db->execute(
-        "SELECT SUM(bakiye) FROM HESAP WHERE kullanici_id = 1"
-        );
-    if(bakiyeSorgu.next() && !bakiyeSorgu.value(0).isNull()) {
-        double bakiye = bakiyeSorgu.value(0).toDouble();
-        bakiyeLabel->setText(
-            QString("%L1 TL").arg(bakiye, 0, 'f', 2)
-            );
-    }
+    int kullaniciID = aktifKullanici->getKullaniciID();
 
-    // Hesap no
+    // Önce hesap no'yu al
     QSqlQuery hesapSorgu = db->execute(
-        "SELECT hesap_no FROM HESAP WHERE kullanici_id = 1 LIMIT 1"
+        "SELECT hesap_no FROM HESAP WHERE kullanici_id = " +
+        QString::number(kullaniciID) + " AND hesap_tipi = 'vadesiz' LIMIT 1"
         );
+
     if(hesapSorgu.next()) {
-        hesapNoLabel->setText(hesapSorgu.value(0).toString());
+        QString hesapNo = hesapSorgu.value(0).toString();
+        hesapNoLabel->setText(hesapNo);
+
+        // Sadece o hesabın bakiyesini al
+        QSqlQuery bakiyeSorgu = db->execute(
+            "SELECT bakiye FROM HESAP WHERE hesap_no = '" + hesapNo + "'"
+            );
+
+        if(bakiyeSorgu.next()) {
+            double bakiye = bakiyeSorgu.value(0).toDouble();
+            bakiyeLabel->setText(QString("%L1 TL").arg(bakiye, 0, 'f', 2));
+        }
     }
 }
 
@@ -264,9 +268,9 @@ void CustomerDashboard::sonIslemleriYukle() {
 }
 
 void CustomerDashboard::onTransferClicked() {
-    TransferWindow* tw = new TransferWindow(this);
+    QString hesapNo = hesapNoLabel->text(); // TR001, TR003 vs.
+    TransferWindow* tw = new TransferWindow(hesapNo, this);
     if(tw->exec() == QDialog::Accepted) {
-        // Transfer oldu, bakiyeyi yenile
         bakiyeyiYukle();
         sonIslemleriYukle();
     }

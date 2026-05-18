@@ -17,17 +17,21 @@ bool HesapServisi::bakiyeKontrol(QString hesapNo, double tutar)
     DataBaseManager* db = DataBaseManager::getInstance();
     if(tutar <= 0) return false;
 
-    // TODO(Abdullah): execute() metodun sadece QString aldigi icin bindValue ile uyusmuyor
-    // Bu sebeple guvenligi saglamak icin QSqlQuery nin kendi exec() metodu kullanildi
-    QSqlQuery query;
+    QSqlQuery query(db->getDatabase());
     query.prepare("SELECT bakiye FROM HESAP WHERE hesap_no = :no");
     query.bindValue(":no", hesapNo);
 
-    if (query.exec() && query.next())
-    {
+    qDebug() << "Bakiye kontrol - Hesap:" << hesapNo << "İstenen:" << tutar;
+
+    if (query.exec() && query.next()) {
         double mevcutBakiye = query.value(0).toDouble();
+        qDebug() << "Bulunan bakiye:" << mevcutBakiye;
+        qDebug() << "Yeterli mi:" << (mevcutBakiye >= tutar);
         return (mevcutBakiye >= tutar);
     }
+
+    qDebug() << "Hesap bulunamadı!";
+    qDebug() << "Sorgu hatası:" << query.lastError().text();
     return false;
 }
 

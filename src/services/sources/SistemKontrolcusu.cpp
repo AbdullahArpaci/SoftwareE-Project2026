@@ -47,26 +47,29 @@ Kullanici* SistemKontrolcusu::kullaniciDogrula(QString kimlikNo, QString sifre)
 
     if (query.exec() && query.next())
     {
-        int kullaniciID = query.value("kullanici_id").toInt();
-        QString rol = query.value("rol").toString();
+        int     kullaniciID = query.value("kullanici_id").toInt();
+        QString rol         = query.value("rol").toString();
+        QString ad          = query.value("ad").toString();
+        QString soyad       = query.value("soyad").toString();
+        QString kimlik      = query.value("kimlik_no").toString();
 
         QString mesaj = QString("%1 kimlik numarali kullanici sisteme giris yapti.").arg(kimlikNo);
         logSrv.logKaydet(kullaniciID, "Giris Basarili", mesaj);
 
         Kullanici* aktifKullanici = nullptr;
 
-
-        if (rol == "yonetici")
-        {
+        if (rol == "yonetici") {
             aktifKullanici = new Yonetici();
-        }
-        else
-        {
+        } else {
             aktifKullanici = new Musteri();
         }
 
-        // TODO(Durancan): Kullanici, Musteri ve Yonetici siniflarinda su an parametreli constructor veya setter metotlari yok
-        // Yukarida uretilen aktifKullanici nesnesinin icini veritabanindan gelen verilerle doldurabilmek icin siniflarina setter metotlari eklemelisin.
+        // Setter'ları çağır
+        aktifKullanici->setKullaniciID(kullaniciID);
+        aktifKullanici->setKimlikNo(kimlik);
+        aktifKullanici->setAd(ad);
+        aktifKullanici->setSoyad(soyad);
+        aktifKullanici->setRol(rol);
 
         return aktifKullanici;
     }
