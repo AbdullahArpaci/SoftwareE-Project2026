@@ -16,6 +16,7 @@ public:
     void commit();
     void rollback();
     bool isConnected() const;
+    QSqlDatabase getDatabase() const { return db; }
 private:
     DataBaseManager();
     ~DataBaseManager();

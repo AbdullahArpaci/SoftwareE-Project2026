@@ -12,13 +12,15 @@ class TransferWindow : public QDialog
     Q_OBJECT
 
 public:
-    TransferWindow(QWidget *parent = nullptr);
+    TransferWindow(const QString& gonderenHesapNo,
+                   QWidget* parent = nullptr);
     ~TransferWindow();
 
 private slots:
     void transfer_islemini_baslat();
 
 private:
+    QString gonderenHesap;
     QLineEdit* alici_hesap_input;
     QLineEdit* tutar_input;
     QPushButton* transfer_butonu;

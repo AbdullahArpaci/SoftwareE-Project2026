@@ -34,20 +34,26 @@ bool TransferServisi::transferYap(QString gonderen, QString alici, double tutar)
 
     db->beginTransaction();
 
-    if (hesapSrv.bakiyeKontrol(gonderen, tutar))
-    {
-        if (hesapSrv.bakiyeGuncelle(gonderen, -tutar) && hesapSrv.bakiyeGuncelle(alici, tutar))
-        {
+    if (hesapSrv.bakiyeKontrol(gonderen, tutar)) {
+        if (hesapSrv.bakiyeGuncelle(gonderen, -tutar) &&
+            hesapSrv.bakiyeGuncelle(alici, tutar)) {
+
+            QSqlQuery islemSorgu;
+            islemSorgu.prepare(
+                "INSERT INTO ISLEM "
+                "(gonderici_hesap, alici_hesap, tutar, islem_tipi, durum, aciklama) "
+                "VALUES (:gonderen, :alici, :tutar, 'transfer', 'tamamlandi', 'Para transferi')"
+                );
+            islemSorgu.bindValue(":gonderen", gonderen);
+            islemSorgu.bindValue(":alici",    alici);
+            islemSorgu.bindValue(":tutar",    tutar);
+            islemSorgu.exec();
+
             db->commit();
 
-            QString detay = QString("%1 nolu hesaptan %2 nolu hesaba %3 TL tutarinda transfer basariyla gerceklestirildi.")
-                                .arg(gonderen)
-                                .arg(alici)
-                                .arg(tutar);
-
-            // TODO(Abdullah/Durancan): Buradaki 0 (kullaniciID degeri) temsili olarak verilmistir. Gonderen hesabin sahibinin gercek ID sini veritabanindan veya nesneden cekilerek buraya eklenmeli.
+            QString detay = QString("%1 hesabından %2 hesabına %3 TL transfer.")
+                                .arg(gonderen).arg(alici).arg(tutar);
             logSrv.logKaydet(0, "Para Transferi", detay);
-
             return true;
         }
     }

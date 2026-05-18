@@ -3,7 +3,9 @@
 #include <QDoubleValidator>
 #include <TransferServisi.h>
 
-TransferWindow::TransferWindow(QWidget *parent) : QDialog(parent)
+TransferWindow::TransferWindow(const QString& gonderenHesapNo,
+                               QWidget* parent)
+    : QDialog(parent), gonderenHesap(gonderenHesapNo)  // ← kaydet
 {
     arayuzu_hazirla();
     stil_uygula();
@@ -88,7 +90,7 @@ void TransferWindow::transfer_islemini_baslat()
 
     // Backend bağlantısı
     TransferServisi ts;
-    bool basarili = ts.transferYap("TR001", alici_hesap, tutar);
+    bool basarili = ts.transferYap(gonderenHesap, alici_hesap, tutar);
     // TR001 → şimdilik sabit, ileride aktif kullanıcıdan gelecek
 
     if(basarili) {
