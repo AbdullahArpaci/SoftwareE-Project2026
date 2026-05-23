@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QHeaderView>
 #include <TransferWindow.h>
+#include <QInputDialog>
+#include <QMessageBox>
+#include "HesapServisi.h"
 
 CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
     : QWidget(parent), aktifKullanici(kullanici) {
@@ -69,6 +72,30 @@ CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
         "font-weight: bold;"
         );
 
+    paraYatirButon = new QPushButton("💵   Para Yatır");
+    paraYatirButon->setFixedHeight(55);
+    paraYatirButon->setCursor(Qt::PointingHandCursor);
+    paraYatirButon->setStyleSheet(
+        "background-color: #e2b96f;"
+        "color: #1a1a2e;"
+        "border: none;"
+        "border-radius: 10px;"
+        "font-size: 15px;"
+        "font-weight: bold;"
+        );
+
+    paraCekButon = new QPushButton("🏧   Para Çek");
+    paraCekButon->setFixedHeight(55);
+    paraCekButon->setCursor(Qt::PointingHandCursor);
+    paraCekButon->setStyleSheet(
+        "background-color: #e2b96f;"
+        "color: #1a1a2e;"
+        "border: none;"
+        "border-radius: 10px;"
+        "font-size: 15px;"
+        "font-weight: bold;"
+        );
+
     islemGecmisiButon = new QPushButton("📋   İşlem Geçmişi");
     islemGecmisiButon->setFixedHeight(55);
     islemGecmisiButon->setCursor(Qt::PointingHandCursor);
@@ -83,6 +110,8 @@ CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
 
     QHBoxLayout* butonLayout = new QHBoxLayout();
     butonLayout->setSpacing(20);
+    butonLayout->addWidget(paraYatirButon);
+    butonLayout->addWidget(paraCekButon);
     butonLayout->addWidget(transferButon);
     butonLayout->addWidget(islemGecmisiButon);
 
@@ -150,6 +179,10 @@ CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
             this, &CustomerDashboard::onIslemGecmisiClicked);
     connect(cikisButon,        &QPushButton::clicked,
             this, &CustomerDashboard::onCikisClicked);
+    connect(paraYatirButon,    &QPushButton::clicked,
+            this, &CustomerDashboard::onParaYatirClicked);
+    connect(paraCekButon,      &QPushButton::clicked,
+            this, &CustomerDashboard::onParaCekClicked);
 
     // Verileri yükle
     bakiyeyiYukle();
@@ -285,4 +318,66 @@ void CustomerDashboard::onCikisClicked() {
     LoginWindow* login = new LoginWindow();
     login->show();
     this->close();
+}
+
+void CustomerDashboard::onParaYatirClicked() {
+    QInputDialog dialog(this);
+    dialog.setWindowTitle("Para Yatır");
+    dialog.setLabelText("Yatırmak istediğiniz tutarı girin (TL):");
+    dialog.setDoubleValue(0.0);
+    dialog.setDoubleMinimum(0.1);
+    dialog.setDoubleMaximum(1000000.0);
+    dialog.setDoubleDecimals(2);
+
+    dialog.setStyleSheet(
+        "QInputDialog { background-color: #1a1a2e; color: white; }"
+        "QLabel { color: white; font-size: 14px; border: none; }"
+        "QLineEdit { background-color: #16213e; color: white; border: 2px solid #e2b96f; border-radius: 5px; padding: 6px; }"
+        "QPushButton { background-color: #e2b96f; color: #1a1a2e; font-weight: bold; padding: 6px 12px; border-radius: 4px; border: none; }"
+        );
+
+    if (dialog.exec() == QDialog::Accepted) {
+        double tutar = dialog.doubleValue();
+        if (tutar > 0) {
+            HesapServisi hs;
+            if(hs.paraYatir(hesapNoLabel->text(), tutar)) {
+                QMessageBox::information(this, "Başarılı", "Para başarıyla hesabınıza yatırıldı.");
+                bakiyeyiYukle();
+                sonIslemleriYukle();
+            } else {
+                QMessageBox::critical(this, "Hata", "İşlem sırasında bir hata oluştu!");
+            }
+        }
+    }
+}
+
+void CustomerDashboard::onParaCekClicked() {
+    QInputDialog dialog(this);
+    dialog.setWindowTitle("Para Çek");
+    dialog.setLabelText("Çekmek istediğiniz tutarı girin (TL):");
+    dialog.setDoubleValue(0.0);
+    dialog.setDoubleMinimum(0.1);
+    dialog.setDoubleMaximum(1000000.0);
+    dialog.setDoubleDecimals(2);
+
+    dialog.setStyleSheet(
+        "QInputDialog { background-color: #1a1a2e; color: white; }"
+        "QLabel { color: white; font-size: 14px; border: none; }"
+        "QLineEdit { background-color: #16213e; color: white; border: 2px solid #e2b96f; border-radius: 5px; padding: 6px; }"
+        "QPushButton { background-color: #e2b96f; color: #1a1a2e; font-weight: bold; padding: 6px 12px; border-radius: 4px; border: none; }"
+        );
+
+    if (dialog.exec() == QDialog::Accepted) {
+        double tutar = dialog.doubleValue();
+        if (tutar > 0) {
+            HesapServisi hs;
+            if(hs.paraCek(hesapNoLabel->text(), tutar)) {
+                QMessageBox::information(this, "Başarılı", "Para çekme işlemi başarılı.");
+                bakiyeyiYukle();
+                sonIslemleriYukle();
+            } else {
+                QMessageBox::critical(this, "Hata", "Bakiye yetersiz veya bir hata oluştu!");
+            }
+        }
+    }
 }
