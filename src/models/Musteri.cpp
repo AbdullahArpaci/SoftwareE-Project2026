@@ -20,7 +20,19 @@ int Musteri::kullaniciIDGetir() const {
 }
 
 void Musteri::profilGoruntule() {
-    // TODO (Yusuf/Abdullah): Arayüze müşterinin bilgileri (ad, soyad, email) gönderilecek.
+    DataBaseManager* db = DataBaseManager::getInstance();
+    
+    QString sql = QString("SELECT ad, soyad, email, telefon FROM KULLANICI WHERE kullanici_id = %1").arg(kullaniciID);
+    QSqlQuery query = db->execute(sql);
+
+    if (query.next()) {
+        this->setAd(query.value("ad").toString());
+        this->setSoyad(query.value("soyad").toString());
+        this->setEmail(query.value("email").toString());
+        this->setTelefon(query.value("telefon").toString());
+    } else {
+        qDebug() << "Profil bilgileri cekilirken hata:" << query.lastError().text();
+    }
 }
 
 // --- YUSUF'UN TODO NOTUNA GÖRE DOLDURULAN SEÇKİN METOT ---
