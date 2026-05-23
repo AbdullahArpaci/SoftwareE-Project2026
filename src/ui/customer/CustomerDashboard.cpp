@@ -212,7 +212,6 @@ void CustomerDashboard::bakiyeyiYukle() {
         QString hesapNo = hesapSorgu.value(0).toString();
         hesapNoLabel->setText(hesapNo);
 
-        // Sadece o hesabın bakiyesini al
         QSqlQuery bakiyeSorgu = db->execute(
             "SELECT bakiye FROM HESAP WHERE hesap_no = '" + hesapNo + "'"
             );
