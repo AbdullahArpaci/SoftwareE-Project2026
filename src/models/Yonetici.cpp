@@ -23,14 +23,11 @@ bool Yonetici::musteriEkle(Musteri* musteri) {
                   "VALUES (:kimlik, :ad, :soyad, :email, :tel, :sifre, 'musteri')");
 
     query.bindValue(":kimlik", musteri->kimlikNoGetir());
-
-    // TODO (Yusuf): Müşteri nesnesindeki diğer veriler (ad, soyad vb.) için Kullanici sınıfına getter metotları (adGetir() vb.) eklenip buraya bind edilmelidir.
-    // Şimdilik test amaçlı temsili değerler atanmıştır:
-    query.bindValue(":ad", "Guncellenecek");
-    query.bindValue(":soyad", "Guncellenecek");
-    query.bindValue(":email", "Guncellenecek");
-    query.bindValue(":tel", "Guncellenecek");
-    query.bindValue(":sifre", "123456");
+    query.bindValue(":ad", musteri->getAd());
+    query.bindValue(":soyad", musteri->getSoyad());
+    query.bindValue(":email", musteri->getEmail());
+    query.bindValue(":tel", musteri->getTelefon());
+    query.bindValue(":sifre", musteri->getSifreHash());
 
     return query.exec();
 }
