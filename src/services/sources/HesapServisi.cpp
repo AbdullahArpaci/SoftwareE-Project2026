@@ -3,6 +3,8 @@
 #include "Hesap.h"
 #include <QSqlQuery>
 #include <QVariant>
+#include <QSqlError>
+#include <QDebug>
 
 HesapServisi::HesapServisi()
 {
@@ -63,4 +65,59 @@ bool HesapServisi::hesapKapat(QString hesapNo)
     query.bindValue(":no", hesapNo);
 
     return query.exec();
+}
+
+bool HesapServisi::paraYatir(QString hesapNo, double tutar)
+{
+    if(tutar <= 0) return false;
+
+    DataBaseManager* db = DataBaseManager::getInstance();
+    db->beginTransaction();
+
+    if (bakiyeGuncelle(hesapNo, tutar)) {
+        QSqlQuery islemSorgu(db->getDatabase());
+        islemSorgu.prepare(
+            "INSERT INTO ISLEM (gonderici_hesap, alici_hesap, tutar, islem_tipi, durum, aciklama) "
+            "VALUES (:hesap, :hesap, :tutar, 'yatirma', 'tamamlandi', 'Şubeden para yatırma')"
+            );
+        islemSorgu.bindValue(":hesap", hesapNo);
+        islemSorgu.bindValue(":tutar", tutar);
+
+        if (islemSorgu.exec()) {
+            db->commit();
+            return true;
+        }
+    }
+
+    db->rollback();
+    return false;
+}
+
+bool HesapServisi::paraCek(QString hesapNo, double tutar)
+{
+    if(tutar <= 0) return false;
+
+    DataBaseManager* db = DataBaseManager::getInstance();
+
+    if (!bakiyeKontrol(hesapNo, tutar)) return false;
+
+    db->beginTransaction();
+
+    if (bakiyeGuncelle(hesapNo, -tutar)) {
+        QSqlQuery islemSorgu(db->getDatabase());
+        islemSorgu.prepare(
+            "INSERT INTO ISLEM (gonderici_hesap, alici_hesap, tutar, islem_tipi, durum, aciklama) "
+            "VALUES (:hesap, :hesap, :tutar, 'cekme', 'tamamlandi', 'ATM üzerinden para çekme')"
+            );
+        islemSorgu.bindValue(":hesap", hesapNo);
+        islemSorgu.bindValue(":tutar", tutar);
+
+        if (islemSorgu.exec()) {
+            db->commit();
+            return true;
+        }
+    }
+
+    db->rollback();
+    return false;
 }
