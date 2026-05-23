@@ -25,7 +25,9 @@ HEADERS += \
     src/ui/Customer/CustomerDashboard.h \
     src/ui/LoginWindow.h \
     src/ui/admin/admindashboard.h \
-    src/ui/TransferWindow/TransferWindow.h
+    src/ui/TransferWindow/TransferWindow.h \
+    src/ui/admin/AddCustomerDialog.h \
+    src/ui/Customer/CustomerProfileDialog.h
 
 SOURCES += \
     main.cpp \
@@ -42,9 +44,14 @@ SOURCES += \
     src/ui/Customer/CustomerDashboard.cpp \
     src/ui/LoginWindow.cpp \
     src/ui/admin/admindashboard.cpp \
-    src/ui/TransferWindow/TransferWindow.cpp
+    src/ui/TransferWindow/TransferWindow.cpp \
+    src/ui/admin/AddCustomerDialog.cpp \
+    src/ui/Customer/CustomerProfileDialog.cpp
 
-FORMS +=
+FORMS += \
+    src/ui/admin/admindashboard.ui \
+    src/ui/admin/AddCustomerDialog.ui \
+    src/ui/Customer/CustomerProfileDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
