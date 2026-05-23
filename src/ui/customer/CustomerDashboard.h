@@ -11,6 +11,7 @@
 #include <QTableWidget>
 #include "Kullanici.h"
 #include <LoginWindow.h>
+
 class CustomerDashboard : public QWidget {
     Q_OBJECT
 
@@ -22,31 +23,35 @@ private slots:
     void onTransferClicked();
     void onIslemGecmisiClicked();
     void onCikisClicked();
+    void onParaYatirClicked();
+    void onParaCekClicked();
 
 private:
     Kullanici* aktifKullanici;
 
     // Üst bar
-    QLabel*      baslikLabel;
-    QLabel*      kullaniciLabel;
+    QLabel* baslikLabel;
+    QLabel* kullaniciLabel;
     QPushButton* cikisButon;
 
     // Kart 1 — Bakiye
-    QFrame*  bakiyeKart;
-    QLabel*  bakiyeBaslik;
-    QLabel*  bakiyeLabel;
+    QFrame* bakiyeKart;
+    QLabel* bakiyeBaslik;
+    QLabel* bakiyeLabel;
 
     // Kart 2 — Hesap No
-    QFrame*  hesapKart;
-    QLabel*  hesapBaslik;
-    QLabel*  hesapNoLabel;
+    QFrame* hesapKart;
+    QLabel* hesapBaslik;
+    QLabel* hesapNoLabel;
 
     // Butonlar
     QPushButton* transferButon;
     QPushButton* islemGecmisiButon;
+    QPushButton* paraYatirButon;
+    QPushButton* paraCekButon;
 
     // Son işlemler tablosu
-    QLabel*       sonIslemlerBaslik;
+    QLabel* sonIslemlerBaslik;
     QTableWidget* islemlerTablo;
 
     void bakiyeyiYukle();
