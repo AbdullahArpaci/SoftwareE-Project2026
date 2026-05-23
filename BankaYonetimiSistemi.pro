@@ -12,6 +12,7 @@ INCLUDEPATH += src/database \
                src/ui/TransferWindow
 
 HEADERS += \
+    islemgecmisiwindow.h \
     src/database/databasemanager.h \
     src/models/Hesap.h \
     src/models/Islem.h \
@@ -28,6 +29,7 @@ HEADERS += \
     src/ui/TransferWindow/TransferWindow.h
 
 SOURCES += \
+    islemgecmisiwindow.cpp \
     main.cpp \
     src/database/databasemanager.cpp \
     src/models/Hesap.cpp \

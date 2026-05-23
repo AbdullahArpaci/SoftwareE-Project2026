@@ -2,6 +2,8 @@
 #include <databasemanager.h>
 #include <QSqlQuery>
 #include <QVariant>
+#include <QSqlError>
+#include <QDebug>
 
 Hesap::Hesap() {
     bakiye = 0.0;
@@ -56,7 +58,31 @@ double Hesap::bakiyeGetir() {
 
 QList<Islem*> Hesap::islemleriAl() {
     QList<Islem*> liste;
-    // TODO: ISLEM tablosundan bu hesap_no'ya ait işlemler çekilecek.
+    DataBaseManager* db = DataBaseManager::getInstance();
+    QSqlQuery query;
+
+    // --- DURANCAN: İşlem geçmişini çekme ---
+    // TODO (Durancan): ISLEM tablosundan bu hesaba ait işlemler (gelen ve giden) çekilip nesnelere aktarıldı.
+    query.prepare("SELECT * FROM ISLEM WHERE gonderici_hesap = :hesap_no OR alici_hesap = :hesap_no ORDER BY zaman_damgasi DESC");
+    query.bindValue(":hesap_no", hesapNo);
+
+    if (query.exec()) {
+        while (query.next()) {
+            Islem* islem = new Islem();
+            islem->setGonderenHesap(query.value("gonderici_hesap").toString());
+            islem->setAliciHesap(query.value("alici_hesap").toString());
+            islem->setTutar(query.value("tutar").toDouble());
+            islem->setIslemTipi(query.value("islem_tipi").toString());
+            islem->setDurum(query.value("durum").toString());
+            islem->setZamanDamgasi(query.value("zaman_damgasi").toDateTime());
+            islem->setAciklama(query.value("aciklama").toString());
+
+            liste.append(islem);
+        }
+    } else {
+        qDebug() << "İşlemler çekilirken hata oluştu:" << query.lastError().text();
+    }
+
     return liste;
 }
 

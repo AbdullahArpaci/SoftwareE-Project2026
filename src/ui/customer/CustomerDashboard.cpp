@@ -8,6 +8,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include "HesapServisi.h"
+#include "islemgecmisiwindow.h"
 
 CustomerDashboard::CustomerDashboard(Kullanici* kullanici, QWidget* parent)
     : QWidget(parent), aktifKullanici(kullanici) {
@@ -309,8 +310,13 @@ void CustomerDashboard::onTransferClicked() {
 }
 
 void CustomerDashboard::onIslemGecmisiClicked() {
-    // TODO: TransactionHistory açılacak
-    qDebug() << "İşlem geçmişi butonuna basıldı";
+    // --- DURANCAN: İşlem geçmişi buton tetikleyicisi ---
+    // TODO (Durancan): İşlem geçmişi butonuna basıldığında aktif hesap numarası yeni pencereye taşınarak ekran modal (exec) olarak açılır.
+    QString hesapNo = hesapNoLabel->text();
+    if(!hesapNo.isEmpty() && hesapNo != "Yükleniyor...") {
+        IslemGecmisiWindow* iw = new IslemGecmisiWindow(hesapNo, this);
+        iw->exec();
+    }
 }
 
 void CustomerDashboard::onCikisClicked() {
