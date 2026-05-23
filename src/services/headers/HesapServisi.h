@@ -14,6 +14,8 @@ public:
     bool bakiyeGuncelle(QString hesapNo, double fark);
     Hesap* hesapOlustur(int kullaniciID, QString tip);
     bool hesapKapat(QString hesapNo);
+    bool paraYatir(QString hesapNo, double tutar);
+    bool paraCek(QString hesapNo, double tutar);
 };
 
 #endif // HESAPSERVISI_H
