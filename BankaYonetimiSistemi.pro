@@ -9,10 +9,13 @@ INCLUDEPATH += src/database \
                src/ui \
                src/ui/customer \
                src/ui/admin \
-               src/ui/TransferWindow
+               src/ui/TransferWindow \
+               src/ui/IslemGecmisi \
+               src/ui/CustomerProfile \
+               src/ui/AddCustomer \
+
 
 HEADERS += \
-    islemgecmisiwindow.h \
     src/database/databasemanager.h \
     src/models/Hesap.h \
     src/models/Islem.h \
@@ -26,10 +29,12 @@ HEADERS += \
     src/ui/Customer/CustomerDashboard.h \
     src/ui/LoginWindow.h \
     src/ui/admin/admindashboard.h \
-    src/ui/TransferWindow/TransferWindow.h
+    src/ui/TransferWindow/TransferWindow.h \
+    src/ui/IslemGecmisi/islemgecmisiwindow.h \
+    src/ui/CustomerProfile/CustomerProfileDialog.h \
+    src/ui/AddCustomer/AddCustomerDialog.h
 
 SOURCES += \
-    islemgecmisiwindow.cpp \
     main.cpp \
     src/database/databasemanager.cpp \
     src/models/Hesap.cpp \
@@ -44,9 +49,14 @@ SOURCES += \
     src/ui/Customer/CustomerDashboard.cpp \
     src/ui/LoginWindow.cpp \
     src/ui/admin/admindashboard.cpp \
-    src/ui/TransferWindow/TransferWindow.cpp
+    src/ui/TransferWindow/TransferWindow.cpp \
+    src/ui/IslemGecmisi/islemgecmisiwindow.cpp \
+    src/ui/CustomerProfile/CustomerProfileDialog.cpp \
+    src/ui/AddCustomer/AddCustomerDialog.cpp
 
-FORMS +=
+FORMS += \
+    src/ui/CustomerProfile/CustomerProfileDialog.ui \
+    src/ui/AddCustomer/AddCustomerDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

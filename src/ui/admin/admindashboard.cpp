@@ -108,6 +108,48 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
     islemLayout->addWidget(hesapDondurButon);
     islemLayout->addStretch();
 
+    aramaInput = new QLineEdit();
+    aramaInput->setPlaceholderText("Kullanıcı ID veya olay ara...");
+    aramaInput->setStyleSheet(
+        "background-color: #16213e;"
+        "color: #ffffff;"
+        "border: 1px solid #e2b96f;"
+        "border-radius: 6px;"
+        "padding: 8px;"
+        "font-size: 13px;"
+        );
+
+    filtreCombo = new QComboBox();
+    filtreCombo->addItem("Tüm Olaylar");
+    filtreCombo->addItem("Giris Basarili");
+    filtreCombo->addItem("Hatali Giris");
+    filtreCombo->addItem("Para Transferi");
+    filtreCombo->addItem("Hesap Dondurma");
+    filtreCombo->setStyleSheet(
+        "background-color: #16213e;"
+        "color: #ffffff;"
+        "border: 1px solid #e2b96f;"
+        "border-radius: 6px;"
+        "padding: 8px;"
+        "font-size: 13px;"
+        );
+
+    filtreButon = new QPushButton("🔍 Filtrele");
+    filtreButon->setFixedHeight(40);
+    filtreButon->setStyleSheet(
+        "background-color: #e2b96f;"
+        "color: #1a1a2e;"
+        "border: none;"
+        "border-radius: 6px;"
+        "font-weight: bold;"
+        "padding: 0 15px;"
+        );
+
+    QHBoxLayout* filtreLayout = new QHBoxLayout();
+    filtreLayout->addWidget(aramaInput);
+    filtreLayout->addWidget(filtreCombo);
+    filtreLayout->addWidget(filtreButon);
+
     // ========== LOG TABLOSU ==========
     logBaslik = new QLabel("Sistem Logları");
     logBaslik->setStyleSheet(
@@ -138,6 +180,7 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
     anaLayout->addWidget(musteriTablo);
     anaLayout->addLayout(islemLayout);
     anaLayout->addWidget(logBaslik);
+    anaLayout->addLayout(filtreLayout);  // ← bunu ekleyin
     anaLayout->addWidget(logTablo);
 
     setLayout(anaLayout);
@@ -150,6 +193,8 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
     connect(cikisButon, &QPushButton::clicked,
             this, &AdminDashboard::onCikisClicked);
 
+    connect(filtreButon, &QPushButton::clicked,
+            this, &AdminDashboard::onFiltreClicked);
     // Verileri yükle
     musterileriYukle();
     loglarıYukle();
@@ -223,7 +268,6 @@ void AdminDashboard::loglarıYukle() {
 
 void AdminDashboard::onHesapDondurClicked() {
     int secilenSatir = musteriTablo->currentRow();
-
     if(secilenSatir < 0) {
         QMessageBox::warning(this, "Uyarı", "Lütfen bir müşteri seçin!");
         return;
@@ -233,7 +277,6 @@ void AdminDashboard::onHesapDondurClicked() {
     QString ad      = musteriTablo->item(secilenSatir, 0)->text();
     QString soyad   = musteriTablo->item(secilenSatir, 1)->text();
 
-    // Onay iste
     QMessageBox::StandardButton cevap = QMessageBox::question(
         this, "Hesap Dondur",
         ad + " " + soyad + " adlı müşterinin hesabı dondurulsun mu?",
@@ -242,14 +285,21 @@ void AdminDashboard::onHesapDondurClicked() {
 
     if(cevap == QMessageBox::Yes) {
         DataBaseManager* db = DataBaseManager::getInstance();
+
         db->execute(
             "UPDATE HESAP SET donduruldu = 1 WHERE hesap_no = '" + hesapNo + "'"
+            );
+
+        // Log kaydet
+        db->etkinlikKaydet(
+            0,
+            "Hesap Dondurma",
+            ad + " " + soyad + " - " + hesapNo + " numaralı hesap donduruldu."
             );
 
         QMessageBox::information(this, "Başarılı",
                                  hesapNo + " numaralı hesap donduruldu!");
 
-        // Tabloyu yenile
         musterileriYukle();
         loglarıYukle();
     }
@@ -260,6 +310,47 @@ void AdminDashboard::onCikisClicked() {
     LoginWindow* login = new LoginWindow();
     login->show();
     this->close();
+}
+
+void AdminDashboard::onFiltreClicked() {
+    DataBaseManager* db = DataBaseManager::getInstance();
+
+    QString aramaMetni = aramaInput->text().trimmed();
+    QString seciliOlay = filtreCombo->currentText();
+
+    QString sql =
+        "SELECT zaman_damgasi, kullanici_id, olay_tipi, detaylar "
+        "FROM LOG_KAYIT WHERE 1=1 ";
+
+    if(seciliOlay != "Tüm Olaylar") {
+        sql += "AND olay_tipi = '" + seciliOlay + "' ";
+    }
+
+    if(!aramaMetni.isEmpty()) {
+        sql += "AND (CAST(kullanici_id AS TEXT) LIKE '%" + aramaMetni + "%' "
+                                                                        "OR olay_tipi LIKE '%" + aramaMetni + "%' "
+                              "OR detaylar LIKE '%" + aramaMetni + "%') ";
+    }
+
+    sql += "ORDER BY zaman_damgasi DESC LIMIT 50";
+
+    QSqlQuery sorgu = db->execute(sql);
+
+    logTablo->setRowCount(0);
+    int satir = 0;
+
+    while(sorgu.next()) {
+        logTablo->insertRow(satir);
+        logTablo->setItem(satir, 0,
+                          new QTableWidgetItem(sorgu.value(0).toString()));
+        logTablo->setItem(satir, 1,
+                          new QTableWidgetItem(sorgu.value(1).toString()));
+        logTablo->setItem(satir, 2,
+                          new QTableWidgetItem(sorgu.value(2).toString()));
+        logTablo->setItem(satir, 3,
+                          new QTableWidgetItem(sorgu.value(3).toString()));
+        satir++;
+    }
 }
 
 void AdminDashboard::onYeniMusteriClicked()

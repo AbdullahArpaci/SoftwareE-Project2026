@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QComboBox>
+#include <QLineEdit>
 
 class AdminDashboard : public QWidget {
     Q_OBJECT
@@ -38,6 +40,11 @@ private:
 
     void musterileriYukle();
     void loglarıYukle();
+    void onFiltreClicked();
+
+    QLineEdit*  aramaInput;
+    QComboBox*  filtreCombo;
+    QPushButton* filtreButon;
 };
 
 #endif // ADMINDASHBOARD_H
