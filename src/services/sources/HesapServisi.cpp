@@ -5,6 +5,7 @@
 #include <QVariant>
 #include <QSqlError>
 #include <QDebug>
+#include <QDateTime> // Otomatik hesap no üretimi için eklendi
 
 HesapServisi::HesapServisi()
 {
@@ -51,8 +52,34 @@ bool HesapServisi::bakiyeGuncelle(QString hesapNo, double fark)
 
 Hesap* HesapServisi::hesapOlustur(int kullaniciID, QString tip)
 {
-    // TODO(Abdullah): Veritabanina yeni hesap ekleme sorgusu burada yapilmali.
-    // TODO(Durancan): Hesap sinifindan (veya Factory uzerinden) yeni bir nesne olusturup dondurme islemi buraya eklenmeli.
+    DataBaseManager* db = DataBaseManager::getInstance();
+
+    // Yeni bir hesap numarası üretiyoruz (Örn: TR + O anki zamanın milisaniyesi)
+    QString yeniHesapNo = QString("TR%1").arg(QDateTime::currentMSecsSinceEpoch());
+
+    // TODO(Abdullah): Veritabanina yeni hesap ekleme sorgusu burada yapilmali. (Durancan tarafından test için tamamlandı)
+    QSqlQuery query(db->getDatabase());
+    query.prepare("INSERT INTO HESAP (hesap_no, kullanici_id, hesap_tipi, bakiye, para_birimi, aktif, donduruldu) "
+                  "VALUES (:hesap_no, :kullanici_id, :hesap_tipi, 0.0, 'TRY', 1, 0)");
+    query.bindValue(":hesap_no", yeniHesapNo);
+    query.bindValue(":kullanici_id", kullaniciID);
+    query.bindValue(":hesap_tipi", tip);
+
+    if (query.exec()) {
+        // --- DURANCAN: Hesap sınıfından nesne oluşturup döndürme ---
+        // TODO(Durancan): Veritabanına kayıt başarılıysa, yeni Hesap nesnesi oluşturulup bilgileri atanarak döndürüldü.
+        Hesap* yeniHesap = new Hesap();
+        yeniHesap->setHesapNo(yeniHesapNo);
+        yeniHesap->setKullaniciID(kullaniciID);
+        yeniHesap->setHesapTipi(tip);
+        yeniHesap->setBakiye(0.0);
+        yeniHesap->setParaBirimi("TRY");
+
+        qDebug() << "Yeni hesap başarıyla oluşturuldu:" << yeniHesapNo;
+        return yeniHesap;
+    }
+
+    qDebug() << "Hesap oluşturulamadı:" << query.lastError().text();
     return nullptr;
 }
 
