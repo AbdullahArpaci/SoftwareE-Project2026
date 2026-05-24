@@ -32,7 +32,16 @@ public:
     void setAd(QString a);
     void setSoyad(QString s);
     void setRol(QString r);
+    void setEmail(QString e) { email = e; }
+    void setTelefon(QString t) { telefon = t; }
+    void setSifreHash(QString sh) { sifreHash = sh; }
+
     int getKullaniciID() const { return kullaniciID; }
+    QString getAd() const { return ad; }
+    QString getSoyad() const { return soyad; }
+    QString getEmail() const { return email; }
+    QString getTelefon() const { return telefon; }
+    QString getSifreHash() const { return sifreHash; }
     // --- TAKIM İÇİN NOTLAR (Abdullah ve Yusuf'un Dikkatine) ---
     // TODO (Yusuf): girisYap() metodu cagirildiginda SistemKontrolcusu::kullaniciDogrula() metodu calismalidir.
     // TODO (Abdullah): Giris isleminin basarili/basarisiz durumu VeritabaniYoneticisi::etkinlikKaydet() ile loglanmalidir.
