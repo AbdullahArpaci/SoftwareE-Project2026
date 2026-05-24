@@ -19,6 +19,7 @@ public:
 private slots:
     void onHesapDondurClicked();
     void onCikisClicked();
+    void onYeniMusteriClicked();
 
 private:
     // Üst bar
@@ -29,6 +30,7 @@ private:
     QLabel*       musteriBaslik;
     QTableWidget* musteriTablo;
     QPushButton*  hesapDondurButon;
+    QPushButton*  yeniMusteriButon;
 
     // Loglar
     QLabel*       logBaslik;
