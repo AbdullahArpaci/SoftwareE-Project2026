@@ -2,6 +2,7 @@
 #include "databasemanager.h"
 #include "SistemKontrolcusu.h"
 #include "LoginWindow.h"
+#include "AddCustomerDialog.h"
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QDebug>
@@ -90,6 +91,23 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
         "font-weight: bold;"
         );
 
+    yeniMusteriButon = new QPushButton("➕  Yeni Müşteri Ekle");
+    yeniMusteriButon->setFixedHeight(45);
+    yeniMusteriButon->setCursor(Qt::PointingHandCursor);
+    yeniMusteriButon->setStyleSheet(
+        "background-color: #e2b96f;"
+        "color: #1a1a2e;"
+        "border: none;"
+        "border-radius: 8px;"
+        "font-size: 14px;"
+        "font-weight: bold;"
+        );
+
+    QHBoxLayout* islemLayout = new QHBoxLayout();
+    islemLayout->addWidget(yeniMusteriButon);
+    islemLayout->addWidget(hesapDondurButon);
+    islemLayout->addStretch();
+
     // ========== LOG TABLOSU ==========
     logBaslik = new QLabel("Sistem Logları");
     logBaslik->setStyleSheet(
@@ -118,7 +136,7 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
     anaLayout->addLayout(ustBar);
     anaLayout->addWidget(musteriBaslik);
     anaLayout->addWidget(musteriTablo);
-    anaLayout->addWidget(hesapDondurButon);
+    anaLayout->addLayout(islemLayout);
     anaLayout->addWidget(logBaslik);
     anaLayout->addWidget(logTablo);
 
@@ -127,6 +145,8 @@ AdminDashboard::AdminDashboard(QWidget* parent) : QWidget(parent) {
     // ========== SİNYALLER ==========
     connect(hesapDondurButon, &QPushButton::clicked,
             this, &AdminDashboard::onHesapDondurClicked);
+    connect(yeniMusteriButon, &QPushButton::clicked,
+            this, &AdminDashboard::onYeniMusteriClicked);
     connect(cikisButon, &QPushButton::clicked,
             this, &AdminDashboard::onCikisClicked);
 
@@ -240,4 +260,10 @@ void AdminDashboard::onCikisClicked() {
     LoginWindow* login = new LoginWindow();
     login->show();
     this->close();
+}
+
+void AdminDashboard::onYeniMusteriClicked()
+{
+    AddCustomerDialog dialog(this);
+    dialog.exec();
 }
