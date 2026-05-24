@@ -75,6 +75,20 @@ void DataBaseManager::rollback(){
     }
 }
 
+void DataBaseManager::etkinlikKaydet(int kullaniciID,
+                                     const QString& olayTipi,
+                                     const QString& detay) {
+    QSqlQuery query(db);
+    query.prepare(
+        "INSERT INTO LOG_KAYIT (kullanici_id, olay_tipi, detaylar) "
+        "VALUES (:id, :olay, :detay)"
+        );
+    query.bindValue(":id",    kullaniciID);
+    query.bindValue(":olay",  olayTipi);
+    query.bindValue(":detay", detay);
+    query.exec();
+}
+
 bool DataBaseManager::isConnected() const {
     return db.isOpen();
 }

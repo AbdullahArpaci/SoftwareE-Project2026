@@ -16,6 +16,9 @@ public:
     void commit();
     void rollback();
     bool isConnected() const;
+    void etkinlikKaydet(int kullaniciID,
+                        const QString& olayTipi,
+                        const QString& detay);
     QSqlDatabase getDatabase() const { return db; }
 private:
     DataBaseManager();
